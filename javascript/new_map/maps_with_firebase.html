@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script>
+    <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCZZT_huG9X1QLYhnWh4BoZL8My92ELIr4",
+    authDomain: "firesimple-123.firebaseapp.com",
+    databaseURL: "https://firesimple-123.firebaseio.com",
+    projectId: "firesimple-123",
+    storageBucket: "firesimple-123.appspot.com",
+    messagingSenderId: "230921157551"
+    };
+    firebase.initializeApp(config);
+
+    mylat=0;
+    mylang=0;
+
+    var dbRef3 = firebase.database().ref().child('test');
+    dbRef3.once('value', function(snap) {
+    //console.print('data::::'+test)
+    //alert("data is" + snap.child('lat').val()+snap.child('lon').val());
+    mylang=snap.child('lon').val();
+    mylat=snap.child('lat').val();
+   // alert("data is" + mylang+mylat);
+    initMap();
+
+    });
+
+  </script>
+
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFzzIoylOYHcLLD5nIqdH95Me5kVd7xrc">
+    </script>
+
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 400px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+    </style>
+  </head>
+  
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <script>
+// Initialize and add the map
+function initMap() {
+  // The location of Uluru
+  var uluru = {lat: mylat, lng: mylang};
+  // The map, centered at Uluru
+  var map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 4, center: uluru});
+  // The marker, positioned at Uluru
+  var marker = new google.maps.Marker({position: uluru, map: map,draggable:true});
+}
+    </script>
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function
+    -->
+    
+  </body>
+</html>

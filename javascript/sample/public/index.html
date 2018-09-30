@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta  charset="utf-8">
+	<title>my control panel</title>
+</head>
+<body>
+<h1 > lat: </h1>
+<h3 id="lat"> lat will appear here...</h3>
+
+<h1 > lon: </h1>
+<h3 id="lon"> lon will appear here... </h3>
+
+<button onclick="turnon()"> switch on </button>
+<button onclick="turnoff()"> switch off </button>
+
+<h1 > <br> <br> </h1>
+
+<script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCZZT_huG9X1QLYhnWh4BoZL8My92ELIr4",
+    authDomain: "firesimple-123.firebaseapp.com",
+    databaseURL: "https://firesimple-123.firebaseio.com",
+    projectId: "firesimple-123",
+    storageBucket: "firesimple-123.appspot.com",
+    messagingSenderId: "230921157551"
+  };
+  firebase.initializeApp(config);
+
+var lat = document.getElementById('lat');
+var dbRef1 = firebase.database().ref().child('lat');
+dbRef1.on('value', snap => lat.innerText = snap.val());
+
+var lon= document.getElementById('lon');
+var dbRef2 = firebase.database().ref().child('lon');
+dbRef2.remove();
+dbRef2.on('value', snap => lon.innerText = snap.val());
+
+var dbRef3 = firebase.database().ref().child('light/room');
+
+function turnon()
+{
+	alert("light is turned on!");
+	dbRef3.set("on");
+}
+
+function turnoff()
+{
+	alert("light is turned off!");
+	dbRef3.set("off");
+}
+
+</script>
+
+
+</body>
+</html>

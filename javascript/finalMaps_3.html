@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple Markers</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script>
+  <script>
+  // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyCZZT_huG9X1QLYhnWh4BoZL8My92ELIr4",
+      authDomain: "firesimple-123.firebaseapp.com",
+      databaseURL: "https://firesimple-123.firebaseio.com",
+      projectId: "firesimple-123",
+      storageBucket: "firesimple-123.appspot.com",
+      messagingSenderId: "230921157551"
+    };
+      firebase.initializeApp(config);
+
+    var dbRef3 = firebase.database().ref().child('test');
+    var latitude = 0;
+    dbRef3.on('value', snap => latitude = snap.child('lat').val());
+    alert(latitude);  
+
+  </script>
+
+    <script>
+
+      var myLatLng = { lat: snap.child('lat').val(), lng: snap.child('lon').val() };
+
+      function initMap() {
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: myLatLng
+        });
+
+        marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: 'Hello World!',
+          draggable:true
+        });
+      }
+    </script>
+
+    <!----------------------------------------------------------------------------->
+
+    <script>
+
+    dbRef3.on('value', function(snap) {
+    //alert("data is" + snap.child('lat').val()+snap.child('lon').val());
+
+    position = new google.maps.LatLng(snap.child('lat').val(),snap.child('lon').val());
+    marker.setPosition(position);
+
+    });
+
+
+   /* var lat = document.getElementById('lat');
+    var dbRef1 = firebase.database().ref('lat');  
+    dbRef1.on('value', snap => lat.innerText = snap.val());
+
+    var lon= document.getElementById('lon');
+    var dbRef2 = firebase.database().ref().child('lon');
+    dbRef2.on('value', snap => lon.innerText = snap.val());*/
+
+
+</script>
+
+
+<!----------------------------------------------------------------------------->
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFzzIoylOYHcLLD5nIqdH95Me5kVd7xrc&callback=initMap">
+    </script>
+  </body>
+</html>
