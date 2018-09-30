@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Firebase Test</title>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+  </head>
+  <body>
+    <div id="hi"></div>
+    <script   src="https://code.jquery.com/jquery-1.12.2.min.js"   integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk="   crossorigin="anonymous"></script>
+    <script>
+      $(document).ready(function () {
+        var param = {lastName: "shinde", firstName: "suraj"};
+        $.ajax({
+          url: 'https://firesimple-123.firebaseio.com/.json',
+          type: "PUT",
+          data: JSON.stringify(param),
+          success: function () {
+            alert("success");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

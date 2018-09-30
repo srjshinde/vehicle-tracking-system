@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="map" style="width:100%;height:500px"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+function myMap() {
+   myLatLng = {lat: 18.526211, lng: 73.84268};
+         map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 18,
+          center: myLatLng
+        });
+        
+         marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: 'shrinath plaza!',
+          draggable:true,
+          icon:'sport.png'
+        });
+        
+        map.setMapTypeId('terrain');
+
+}
+
+$(document).ready(function(){
+    $("button").click(function(){
+        $.get("https://firesimple-123.firebaseio.com/lat.json", function(data, status){
+            alert("Data: " + data + "\nStatus: " + status);
+            position = new google.maps.LatLng(myLatLng['lat'],myLatLng['lng']);
+            marker.setPosition(position);
+           
+        });
+    });
+});
+</script>
+<button>Send an HTTP GET request to a page and get the result back</button>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFzzIoylOYHcLLD5nIqdH95Me5kVd7xrc&callback=myMap"></script>
+
+</body>
+</html>

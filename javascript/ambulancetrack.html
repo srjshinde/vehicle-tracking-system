@@ -1,0 +1,151 @@
+<html>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+    
+<script type="text/javascript">
+/*var markers = [{
+            "title": 'Kolhpaur',
+            "lat": '16.7049873',
+            "lng": '74.24325270000008',
+            "description": 'Kolhpaur city'
+        },
+		{
+            "title": 'Pune',
+            "lat": '18.5204303',
+            "lng": '73.85674369999992',
+            "description": 'Pune city'
+        }];
+		*/
+</script>
+<script type="text/javascript">
+    
+</script>
+<table width="100%" height="100%">
+<tr>
+	<td width="30%" style="vertical-align:top">
+		<h2>Ambulance Tracking System</h2>
+		<br/>
+		Select vechicle to track :
+		<br/>
+		<select id="dlambulance" style="width:200px">
+			
+		</select>
+		<input type="hidden" value="" id="hdnselected">
+	</td>
+	<td>
+		<div id="dvMap" style="width: 900px; height: 500px">
+		</div>
+	</td>
+</tr>
+</table>
+<script type="text/javascript">			
+	var ref;
+	function initialize()
+	{
+		const config = {
+				//YOUR CONFIGS
+				apiKey: "AIzaSyBX4njFJe2G2RfB9OZz4H-REOUd_ye8pGA",
+				authDomain: "ambulance-technoscript.firebaseapp.com",
+				databaseURL: "https://ambulance-technoscript.firebaseio.com",
+				projectId: "ambulance-technoscript",
+				storageBucket: "ambulance-technoscript.appspot.com",
+				messagingSenderId: "1017566701362"
+		};
+
+		var app = firebase.initializeApp(config);
+		ref = app.database().ref('/gpstracker');
+		
+	}
+	
+	function LoadFireBaseData(filldropdown)
+	{
+		var markers =[];
+		if (!firebase.apps.length) {
+			initialize();
+		}
+		ref.on('value', function(snapshot) {
+			//console.log(snapshot.val());
+		if(filldropdown==true){
+			$('#dlambulance').html('');
+		}
+			//////////////////////
+			$.each(snapshot.val(), function(i, item){
+ 				var list = new Object();
+				list.title = item.Description; 
+				list.lat  = item.Latitude;
+				list.lng  = item.Longitude;
+				markers.push(list);
+				if(filldropdown==true)
+				{
+					$('#dlambulance').append('<option>'+ item.Description +'</option>');	 //fill items in drop down
+				}
+			});
+			
+			///////////////
+			LoadMap(markers);
+		});
+	}
+	//////////////////
+	///Load map
+	function LoadMap(allmarkers)
+	{
+	
+		var markers = [];
+		var selectedobject = $('#hdnselected').val();
+		
+		if(selectedobject.length == 0)
+		{
+			if(allmarkers.length > 0)
+			{
+				$('#hdnselected').val(allmarkers[0].title);
+			}
+		}
+		selectedobject = $('#hdnselected').val();
+		for (var j = 0; j < allmarkers.length; j++){
+			if(selectedobject == allmarkers[j].title)
+			{
+				console.log('matched');
+				markers.push(allmarkers[j]);
+			}
+		}
+			
+	
+		document.getElementById("dvMap").innerHTML='';
+		var mapOptions = {
+            center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
+            zoom: 16,
+            mapTypeId: google.maps.MapTypeId.HYBRID
+        };
+        var infoWindow = new google.maps.InfoWindow();
+        var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+        for (i = 0; i < markers.length; i++) {
+            var data = markers[i]
+            var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+		draggable:true,
+                title: data.title
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent(data.title);
+                    infoWindow.open(map, marker);
+                });
+            })(marker, data);
+        }		
+	}
+	////////////drop down change
+	$('#dlambulance').change(function () {
+           $('#hdnselected').val($('#dlambulance').val());
+		   LoadFireBaseData(false);
+		   
+    });
+	
+
+setInterval(LoadFireBaseData(true), 5000); // Time in milliseconds
+</script>
+</body>
+</html>
